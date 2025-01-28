@@ -1,0 +1,39 @@
+{
+  "name": "smart-hr-assistant-cli",
+  "version": "1.0.0",
+  "description": "An interactive HR Assistant Chatbot",
+  "main": "dist/index.js",
+  "bin": {
+    "smart-hr": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "hr",
+    "assistant",
+    "chatbot"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "commander": "^11.0.0",
+    "dotenv": "^16.4.7",
+    "inquirer": "^8.2.5",
+    "llamaindex": "^0.8.31",
+    "marked": "^4.3.0",
+    "marked-terminal": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "*",
+    "@types/marked": "^4.3.0",
+    "@types/node": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}
