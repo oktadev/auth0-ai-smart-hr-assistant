@@ -30,151 +30,130 @@ async function main() {
     type_definitions: [
       {
         type: "user",
-        relations: {
-          is_employee: {
-            this: {},
-          },
-          is_manager: {
-            this: {},
-          },
-          is_hr: {
-            this: {},
-          },
-          is_admin: {
-            this: {},
-          },
-        },
+        relations: {},
       },
       {
         type: "employee_document",
         relations: {
+          owner: {
+            this: {},
+          },
           viewer: {
             union: {
               child: [
+                { this: {} },
+                { computedUserset: { object: "user:*" } },
                 {
-                  // Document owner can view their own documents
-                  computedUserset: {
-                    relation: "owner",
-                  },
-                },
-                {
-                  // Manager can view their team members' documents
-                  computedUserset: {
-                    relation: "manager",
-                  },
-                },
-                {
-                  // HR can view all employee documents
                   tupleToUserset: {
-                    tupleset: {
-                      relation: "is_hr",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "team" },
                   },
                 },
                 {
-                  // Admin can view all documents
                   tupleToUserset: {
-                    tupleset: {
-                      relation: "is_admin",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "role" },
                   },
                 },
               ],
             },
           },
-          owner: {
-            this: {},
-          },
-          manager: {
-            this: {},
+          can_view: {
+            union: {
+              child: [
+                { computedUserset: { relation: "owner" } },
+                { computedUserset: { relation: "viewer" } },
+              ],
+            },
           },
         },
       },
       {
         type: "team_document",
         relations: {
+          owner: {
+            this: {},
+          },
           viewer: {
             union: {
               child: [
+                { this: {} },
+                { computedUserset: { object: "user:*" } },
                 {
-                  // Team members can view team documents
-                  computedUserset: {
-                    relation: "team_member",
+                  tupleToUserset: {
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "team" },
                   },
                 },
                 {
-                  // HR can view all team documents
                   tupleToUserset: {
-                    tupleset: {
-                      relation: "is_hr",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
-                  },
-                },
-                {
-                  // Admin can view all documents
-                  tupleToUserset: {
-                    tupleset: {
-                      relation: "is_admin",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "role" },
                   },
                 },
               ],
             },
           },
-          team_member: {
-            this: {},
+          can_view: {
+            union: {
+              child: [
+                { computedUserset: { relation: "owner" } },
+                { computedUserset: { relation: "viewer" } },
+              ],
+            },
           },
         },
       },
       {
         type: "company_document",
         relations: {
+          owner: {
+            this: {},
+          },
           viewer: {
             union: {
+              child: [{ computedUserset: { object: "user:*" } }],
+            },
+          },
+          can_view: {
+            union: {
               child: [
+                { computedUserset: { relation: "owner" } },
+                { computedUserset: { relation: "viewer" } },
+              ],
+            },
+          },
+        },
+      },
+      {
+        type: "team",
+        relations: {
+          member: {
+            union: {
+              child: [
+                { this: {} },
                 {
-                  // All employees can view company documents
                   tupleToUserset: {
-                    tupleset: {
-                      relation: "is_employee",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "team" },
                   },
                 },
+              ],
+            },
+          },
+        },
+      },
+      {
+        type: "role",
+        relations: {
+          member: {
+            union: {
+              child: [
+                { this: {} },
                 {
-                  // HR can view all company documents
                   tupleToUserset: {
-                    tupleset: {
-                      relation: "is_hr",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
-                  },
-                },
-                {
-                  // Admin can view all documents
-                  tupleToUserset: {
-                    tupleset: {
-                      relation: "is_admin",
-                    },
-                    computedUserset: {
-                      object: "user",
-                    },
+                    tupleset: { relation: "member" },
+                    computedUserset: { object: "role" },
                   },
                 },
               ],
@@ -194,19 +173,60 @@ async function main() {
   await fgaClient.write(
     {
       writes: [
-        // Set up some test users with different roles
-        { user: "user:john", relation: "is_employee", object: "user:john" },
-        { user: "user:jane", relation: "is_hr", object: "user:jane" },
-        { user: "user:alice", relation: "is_manager", object: "user:alice" },
-        { user: "user:admin", relation: "is_admin", object: "user:admin" },
+        // User role assignments
+        { user: "user:admin", relation: "member", object: "role:admin" },
+        { user: "user:priya", relation: "member", object: "role:hr" },
+        { user: "user:david", relation: "member", object: "role:manager" },
+        { user: "user:deepa", relation: "member", object: "role:manager" },
+        { user: "user:michael", relation: "member", object: "role:manager" },
+        { user: "user:karthik", relation: "member", object: "role:manager" },
+        { user: "user:james", relation: "member", object: "role:manager" },
 
-        // Set up document ownership and relationships
-        { user: "user:john", relation: "owner", object: "employee_document:john_profile" },
-        { user: "user:alice", relation: "manager", object: "employee_document:john_profile" },
-        
-        // Set up team membership
-        { user: "user:john", relation: "team_member", object: "team_document:engineering" },
-        { user: "user:alice", relation: "team_member", object: "team_document:engineering" },
+        // Team memberships
+        { user: "user:anastasia", relation: "member", object: "team:backend" },
+        { user: "user:jose", relation: "member", object: "team:platform" },
+        { user: "user:sabitha", relation: "member", object: "team:frontend" },
+        { user: "user:wei", relation: "member", object: "team:backend" },
+        { user: "user:ronja", relation: "member", object: "team:devops" },
+
+        // Public documents - accessible to all users
+        { user: "user:*", relation: "viewer", object: "employee_document:anastasia_kuznetsova_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:david_kim_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:deepa_krishnan_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:james_wilson_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:jose_garcia_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:karthik_subramanian_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:michael_rodriguez_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:priya_venkatesh_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:ronja_kohler_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:sabitha_hari_public" },
+        { user: "user:*", relation: "viewer", object: "employee_document:wei_chen_public" },
+
+        // Private documents - owner relationships
+        { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
+        { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
+        { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
+        { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
+        { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
+        { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
+        { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
+        { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
+        { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
+        { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
+        { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
+
+        // HR and Admin access to private documents
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
       ],
     },
     {
@@ -214,7 +234,9 @@ async function main() {
     }
   );
 
-  console.log("Successfully initialized FGA store with authorization model and test data");
+  console.log(
+    "Successfully initialized FGA store with authorization model and test data"
+  );
 }
 
 main().catch(console.error);
