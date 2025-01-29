@@ -42,7 +42,9 @@ async function startChat(username: string) {
   // Initialize LLM service
   const llmAgent = new LlmAgent(username);
   try {
-    console.log(chalk.yellow("\nInitializing AI service..."));
+    console.log(
+      chalk.yellow("\nInitializing AI service...\nLoading documents...")
+    );
     await llmAgent.initialize();
     console.log(chalk.green("AI service ready! 🚀\n"));
   } catch (error) {

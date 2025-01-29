@@ -1,0 +1,30 @@
+model
+  schema 1.1
+
+type user
+
+type employee_document
+  relations
+    define owner: [user]
+    define viewer: [user, user:*,team#member, role#member]
+    define can_view: owner or viewer
+
+type team_document
+  relations
+    define owner: [user]
+    define viewer: [user,user:*,team#member,role#member]
+    define can_view: owner or viewer
+
+type company_document
+  relations
+    define owner: [user]
+    define viewer: [user:*]
+    define can_view: owner or viewer
+
+type team
+  relations
+    define member: [user, team#member]
+
+type role
+  relations
+    define member: [user, role#member]
