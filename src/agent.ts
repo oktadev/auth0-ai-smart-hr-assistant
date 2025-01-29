@@ -9,17 +9,18 @@ import {
 import "dotenv/config";
 import path from "path";
 import { FGARetriever } from "./fga-retriever";
+import { User } from "./users";
 
 export class LlmAgent {
-  private username: string;
+  private user: User;
   private agent: OpenAIAgent | null = null;
 
-  constructor(username: string) {
-    this.username = username;
+  constructor(user: User) {
+    this.user = user;
   }
 
-  setUsername(username: string) {
-    this.username = username;
+  setUser(user: User) {
+    this.user = user;
   }
 
   async initialize() {
@@ -36,9 +37,9 @@ export class LlmAgent {
         retriever: index.asRetriever({ similarityTopK: 30 }),
         // FGA tuple to query for the user's permissions
         buildQuery: (document) => ({
-          user: `user:${this.username}`,
+          user: `user:${this.user.name}`,
           object: `doc:${document.metadata.file_name.split(".")[0]}`,
-          relation: "viewer",
+          relation: "can_view",
         }),
       });
 

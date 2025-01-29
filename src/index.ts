@@ -7,40 +7,37 @@ import { marked } from "marked";
 import TerminalRenderer from "marked-terminal";
 import { LlmAgent } from "./agent";
 import chalk from "chalk";
-
-interface UserSession {
-  username: string;
-}
+import { User, AVAILABLE_USERS, UserQuestion } from "./users";
 
 interface ChatQuestion {
   question: string;
 }
 
-async function promptUsername(): Promise<string> {
-  const { username } = await inquirer.prompt<UserSession>([
+async function promptUsername(): Promise<User> {
+  const { value } = await inquirer.prompt<UserQuestion>([
     {
-      type: "input",
-      name: "username",
-      message: "Please enter your username:",
-      validate: (input: string) => input.length > 0 || "Name cannot be empty",
+      type: "list",
+      name: "value",
+      message: "Please select a user:",
+      choices: AVAILABLE_USERS,
     },
   ]);
-  return username;
+
+  return value;
 }
 
-async function startChat(username: string) {
+async function startChat(user: User) {
   console.log(
     chalk.green(
-      `\nWelcome ${chalk.bold(
-        username
-      )}! 👋 I'm your HR Assistant powered by AI.
+      `\nWelcome ${chalk.bold(user.displayName)}! 
+      👋 I'm your HR Assistant powered by AI.
       Ask me anything about HR policies, Company policies, team documents, or employee information.
       Enter '/switchuser' to switch to a different user and '/bye' to exit.`
     )
   );
 
   // Initialize LLM service
-  const llmAgent = new LlmAgent(username);
+  const llmAgent = new LlmAgent(user);
   try {
     console.log(
       chalk.yellow("\nInitializing AI service...\nLoading documents...")
@@ -68,15 +65,17 @@ async function startChat(username: string) {
 
     // Check for commands first
     if (question.toLowerCase() === "/switchuser") {
-      const newUsername = await promptUsername();
-      console.log(chalk.cyan(`\n👋 Switching user to: ${newUsername}`));
-      username = newUsername;
-      llmAgent.setUsername(username);
+      const newUserSession = await promptUsername();
+      console.log(
+        chalk.cyan(`\n👋 Switching user to: ${newUserSession.displayName}`)
+      );
+      user = newUserSession;
+      llmAgent.setUser(user);
       console.log(
         chalk.green(
-          `\nWelcome ${chalk.bold(
-            username
-          )}! 👋 I'm your HR Assistant powered by AI. Ask me anything about HR policies, Company policies, or employee information.\n`
+          `\nWelcome ${chalk.bold(user.name)} (${chalk.italic(
+            user.role
+          )})! 👋 I'm your HR Assistant powered by AI. Ask me anything about HR policies, Company policies, or employee information.\n`
         )
       );
       continue;
@@ -121,8 +120,8 @@ program
   .description("Interactive HR Assistant Chatbot powered by AI")
   .version("1.0.0")
   .action(async () => {
-    const username = await promptUsername();
-    await startChat(username);
+    const userSession = await promptUsername();
+    await startChat(userSession);
   });
 
 program.parse();
