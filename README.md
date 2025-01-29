@@ -67,7 +67,7 @@ Manager Level +
 
 ## Technical Stack
 
-This application is built with TypeScript, Node.js, LlamaIndex, and OpenFGA. We will use [create-llama](https://www.llamaindex.ai/blog/create-llama-a-command-line-tool-to-generate-llamaindex-apps-8f7683021191) to bootstrap this app.
+This application is built with TypeScript, Node.js, LlamaIndex, and OpenFGA.
 
 ## Data Sources
 
