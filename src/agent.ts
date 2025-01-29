@@ -8,41 +8,7 @@ import {
 } from "llamaindex";
 import "dotenv/config";
 import path from "path";
-
-// Sample HR policies and information
-const hrPolicies = `
-Company HR Policies Overview:
-
-1. Leave Policy:
-- 20 days annual leave
-- 10 days sick leave
-- Parental leave as per local regulations
-- Leave requests must be submitted 2 weeks in advance
-
-2. Work Hours:
-- Standard work hours: 9 AM to 5 PM
-- Flexible timing available with manager approval
-- Core hours: 10 AM to 4 PM
-
-3. Remote Work:
-- Hybrid work model (3 days office, 2 days remote)
-- Must maintain regular communication
-- Need stable internet connection
-
-4. Benefits:
-- Health insurance
-- 401(k) matching
-- Professional development budget
-- Annual wellness allowance
-
-5. Code of Conduct:
-- Professional behavior expected
-- Zero tolerance for harassment
-- Confidentiality of company information
-- Dress code: Business casual
-
-For specific queries, contact HR@company.com
-`;
+import { FGARetriever } from "./fga-retriever";
 
 export class LlmAgent {
   private username: string;
@@ -62,21 +28,28 @@ export class LlmAgent {
       const documentsPath = path.join(process.cwd(), "documents");
       const reader = new SimpleDirectoryReader();
       const documents = await reader.loadData(documentsPath);
-
-      // Add the default HR policies as a document
-      documents.push(new Document({ text: hrPolicies }));
-
       // Create index
       const index = await VectorStoreIndex.fromDocuments(documents, {});
+      // Create a retriever that uses FGA to gate fetching documents on permissions.
+      const retriever = FGARetriever.create({
+        // Set the similarityTopK to retrieve more documents as SimpleDirectoryReader creates chunks
+        retriever: index.asRetriever({ similarityTopK: 30 }),
+        // FGA tuple to query for the user's permissions
+        buildQuery: (document) => ({
+          user: `user:${this.username}`,
+          object: `doc:${document.metadata.file_name.split(".")[0]}`,
+          relation: "viewer",
+        }),
+      });
 
-      // Create query engine
-      const queryEngine = index.asQueryEngine();
+      // Create a query engine and convert it into a tool
+      const queryEngine = index.asQueryEngine({ retriever });
       const tools = [
         new QueryEngineTool({
           queryEngine,
           metadata: {
             name: "smart-hr-assistant",
-            description: `This tool can answer detailed questions about the company's HR policies.`,
+            description: `This tool can answer detailed questions about the company's HR policies and employees.`,
           },
         }),
       ];

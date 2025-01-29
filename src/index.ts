@@ -33,7 +33,9 @@ async function startChat(username: string) {
     chalk.green(
       `\nWelcome ${chalk.bold(
         username
-      )}! 👋 I'm your HR Assistant powered by AI. Ask me anything about HR policies, Company policies, or employee information.`
+      )}! 👋 I'm your HR Assistant powered by AI.
+      Ask me anything about HR policies, Company policies, team documents, or employee information.
+      Enter '/switchuser' to switch to a different user and '/bye' to exit.`
     )
   );
 
@@ -79,8 +81,8 @@ async function startChat(username: string) {
     }
 
     if (
-      question.toLowerCase().includes("bye") ||
-      question.toLowerCase().includes("exit")
+      question.toLowerCase().includes("/bye") ||
+      question.toLowerCase().includes("/exit")
     ) {
       console.log(chalk.cyan("\n🤖 Assistant: Goodbye! Have a great day! 👋"));
       process.exit(0);
