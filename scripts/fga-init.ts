@@ -29,70 +29,141 @@ async function main() {
     schema_version: "1.1",
     type_definitions: [
       {
+        metadata: {
+          relations: {
+            can_manage: {},
+            team: {
+              directly_related_user_types: [
+                {
+                  type: "team",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          can_manage: {
+            tupleToUserset: {
+              computedUserset: {
+                relation: "manager",
+              },
+              tupleset: {
+                relation: "team",
+              },
+            },
+          },
+          team: {
+            this: {},
+          },
+        },
         type: "user",
       },
       {
         metadata: {
           relations: {
-            can_view: {},
-            owner: {
+            is_admin: {
               directly_related_user_types: [
                 {
                   type: "user",
                 },
               ],
             },
-            viewer: {
+            is_hr: {
               directly_related_user_types: [
                 {
                   type: "user",
                 },
+              ],
+            },
+            member: {
+              directly_related_user_types: [
                 {
                   type: "user",
-                  wildcard: {},
-                },
-                {
-                  relation: "member",
-                  type: "team",
-                },
-                {
-                  relation: "member",
-                  type: "role",
                 },
               ],
             },
           },
         },
         relations: {
-          can_view: {
+          is_admin: {
+            this: {},
+          },
+          is_hr: {
+            this: {},
+          },
+          member: {
             union: {
               child: [
                 {
+                  this: {},
+                },
+                {
                   computedUserset: {
-                    relation: "owner",
+                    relation: "is_admin",
                   },
                 },
                 {
                   computedUserset: {
-                    relation: "viewer",
+                    relation: "is_hr",
                   },
                 },
               ],
             },
           },
-          owner: {
-            this: {},
-          },
-          viewer: {
-            this: {},
-          },
         },
-        type: "employee_document",
+        type: "company",
       },
       {
         metadata: {
           relations: {
-            can_view: {},
+            manager: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+            member: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          manager: {
+            this: {},
+          },
+          member: {
+            union: {
+              child: [
+                {
+                  this: {},
+                },
+                {
+                  computedUserset: {
+                    relation: "manager",
+                  },
+                },
+              ],
+            },
+          },
+        },
+        type: "team",
+      },
+      {
+        metadata: {
+          relations: {
+            can_read: {},
+            company: {
+              directly_related_user_types: [
+                {
+                  type: "company",
+                },
+              ],
+            },
             owner: {
               directly_related_user_types: [
                 {
@@ -100,29 +171,10 @@ async function main() {
                 },
               ],
             },
-            viewer: {
-              directly_related_user_types: [
-                {
-                  type: "user",
-                },
-                {
-                  type: "user",
-                  wildcard: {},
-                },
-                {
-                  relation: "member",
-                  type: "team",
-                },
-                {
-                  relation: "member",
-                  type: "role",
-                },
-              ],
-            },
           },
         },
         relations: {
-          can_view: {
+          can_read: {
             union: {
               child: [
                 {
@@ -131,17 +183,235 @@ async function main() {
                   },
                 },
                 {
-                  computedUserset: {
-                    relation: "viewer",
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_hr",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_admin",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
                   },
                 },
               ],
             },
           },
+          company: {
+            this: {},
+          },
           owner: {
             this: {},
           },
-          viewer: {
+        },
+        type: "salary_information",
+      },
+      {
+        metadata: {
+          relations: {
+            can_read: {},
+            company: {
+              directly_related_user_types: [
+                {
+                  type: "company",
+                },
+              ],
+            },
+            owner: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          can_read: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_hr",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "can_manage",
+                    },
+                    tupleset: {
+                      relation: "owner",
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_admin",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          company: {
+            this: {},
+          },
+          owner: {
+            this: {},
+          },
+        },
+        type: "performance_review",
+      },
+      {
+        metadata: {
+          relations: {
+            can_read: {},
+            company: {
+              directly_related_user_types: [
+                {
+                  type: "company",
+                },
+              ],
+            },
+            owner: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          can_read: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_hr",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_admin",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          company: {
+            this: {},
+          },
+          owner: {
+            this: {},
+          },
+        },
+        type: "employee_information",
+      },
+      {
+        metadata: {
+          relations: {
+            can_read: {},
+            company: {
+              directly_related_user_types: [
+                {
+                  type: "company",
+                },
+              ],
+            },
+            owner: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+            team: {
+              directly_related_user_types: [
+                {
+                  type: "team",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          can_read: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "member",
+                    },
+                    tupleset: {
+                      relation: "team",
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "is_admin",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          company: {
+            this: {},
+          },
+          owner: {
+            this: {},
+          },
+          team: {
             this: {},
           },
         },
@@ -150,7 +420,14 @@ async function main() {
       {
         metadata: {
           relations: {
-            can_view: {},
+            can_read: {},
+            company: {
+              directly_related_user_types: [
+                {
+                  type: "company",
+                },
+              ],
+            },
             owner: {
               directly_related_user_types: [
                 {
@@ -158,18 +435,10 @@ async function main() {
                 },
               ],
             },
-            viewer: {
-              directly_related_user_types: [
-                {
-                  type: "user",
-                  wildcard: {},
-                },
-              ],
-            },
           },
         },
         relations: {
-          can_view: {
+          can_read: {
             union: {
               child: [
                 {
@@ -178,67 +447,26 @@ async function main() {
                   },
                 },
                 {
-                  computedUserset: {
-                    relation: "viewer",
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: "member",
+                    },
+                    tupleset: {
+                      relation: "company",
+                    },
                   },
                 },
               ],
             },
           },
+          company: {
+            this: {},
+          },
           owner: {
             this: {},
           },
-          viewer: {
-            this: {},
-          },
         },
-        type: "company_document",
-      },
-      {
-        metadata: {
-          relations: {
-            member: {
-              directly_related_user_types: [
-                {
-                  type: "user",
-                },
-                {
-                  relation: "member",
-                  type: "team",
-                },
-              ],
-            },
-          },
-        },
-        relations: {
-          member: {
-            this: {},
-          },
-        },
-        type: "team",
-      },
-      {
-        metadata: {
-          relations: {
-            member: {
-              directly_related_user_types: [
-                {
-                  type: "user",
-                },
-                {
-                  relation: "member",
-                  type: "role",
-                },
-              ],
-            },
-          },
-        },
-        relations: {
-          member: {
-            this: {},
-          },
-        },
-        type: "role",
+        type: "public_document",
       },
     ],
   };
@@ -254,36 +482,38 @@ async function main() {
       // prettier-ignore
       writes: [
         // User role assignments
-        { user: "user:admin", relation: "member", object: "role:admin" },
-        { user: "user:priya", relation: "member", object: "role:hr" },
-        { user: "user:david", relation: "member", object: "role:manager" },
-        { user: "user:deepa", relation: "member", object: "role:manager" },
-        { user: "user:michael", relation: "member", object: "role:manager" },
-        { user: "user:karthik", relation: "member", object: "role:manager" },
-        { user: "user:james", relation: "member", object: "role:manager" },
+        { user: "user:admin", relation: "member", object: "company:zeko" },
+        { user: "user:sabitha", relation: "member", object: "company:zeko" },
+        { user: "user:sabitha", relation: "owner", object: "employee_information:sabitha_hari_public" },
+        // { user: "user:priya", relation: "member", object: "role:hr" },
+        // { user: "user:david", relation: "member", object: "role:manager" },
+        // { user: "user:deepa", relation: "member", object: "role:manager" },
+        // { user: "user:michael", relation: "member", object: "role:manager" },
+        // { user: "user:karthik", relation: "member", object: "role:manager" },
+        // { user: "user:james", relation: "member", object: "role:manager" },
 
-        // Team memberships
-        { user: "user:anastasia", relation: "member", object: "team:backend" },
-        { user: "user:jose", relation: "member", object: "team:platform" },
-        { user: "user:sabitha", relation: "member", object: "team:frontend" },
-        { user: "user:wei", relation: "member", object: "team:backend" },
-        { user: "user:ronja", relation: "member", object: "team:devops" },
+        // // Team memberships
+        // { user: "user:anastasia", relation: "member", object: "team:backend" },
+        // { user: "user:jose", relation: "member", object: "team:platform" },
+        // { user: "user:sabitha", relation: "member", object: "team:frontend" },
+        // { user: "user:wei", relation: "member", object: "team:backend" },
+        // { user: "user:ronja", relation: "member", object: "team:devops" },
 
-        // Public documents - accessible to all users
-        { user: "user:*", relation: "viewer", object: "employee_document:anastasia_kuznetsova_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:david_kim_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:deepa_krishnan_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:james_wilson_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:jose_garcia_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:karthik_subramanian_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:michael_rodriguez_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:priya_venkatesh_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:ronja_kohler_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:sabitha_hari_public" },
-        { user: "user:*", relation: "viewer", object: "employee_document:wei_chen_public" },
-        { user: "user:*", relation: "viewer", object: "company_document:code_of_conduct_public" },
-        { user: "user:*", relation: "viewer", object: "company_document:leave_policy_public" },
-        { user: "user:*", relation: "viewer", object: "company_document:wfh_policy_public" },
+        // // Public documents - accessible to all users
+        // { user: "user:*", relation: "viewer", object: "employee_document:anastasia_kuznetsova_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:david_kim_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:deepa_krishnan_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:james_wilson_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:jose_garcia_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:karthik_subramanian_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:michael_rodriguez_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:priya_venkatesh_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:ronja_kohler_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:sabitha_hari_public" },
+        // { user: "user:*", relation: "viewer", object: "employee_document:wei_chen_public" },
+        // { user: "user:*", relation: "viewer", object: "company_document:code_of_conduct_public" },
+        // { user: "user:*", relation: "viewer", object: "company_document:leave_policy_public" },
+        // { user: "user:*", relation: "viewer", object: "company_document:wfh_policy_public" },
       ],
     },
     {
@@ -291,77 +521,77 @@ async function main() {
     }
   );
 
-  await fgaClient.write(
-    {
-      // prettier-ignore
-      writes: [
-        // Private documents - owner relationships
-        { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
-        { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
-        { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
-        { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
-        { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
-        { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
-        { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
-        { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
-        { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
-        { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
-        { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
+  //   await fgaClient.write(
+  //     {
+  //       // prettier-ignore
+  //       writes: [
+  //         // Private documents - owner relationships
+  //         { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
+  //         { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
+  //         { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
+  //         { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
+  //         { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
+  //         { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
+  //         { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
+  //         { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
+  //         { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
+  //         { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
+  //         { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
 
-        // HR and Admin access to private documents
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
-      ],
-    },
-    {
-      authorizationModelId: model.authorization_model_id,
-    }
-  );
+  //         // HR and Admin access to private documents
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
+  //       ],
+  //     },
+  //     {
+  //       authorizationModelId: model.authorization_model_id,
+  //     }
+  //   );
 
-  await fgaClient.write(
-    {
-      // prettier-ignore
-      writes: [
-        // Private documents - owner relationships
-        { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
-        { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
-        { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
-        { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
-        { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
-        { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
-        { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
-        { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
-        { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
-        { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
-        { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
+  //   await fgaClient.write(
+  //     {
+  //       // prettier-ignore
+  //       writes: [
+  //         // Private documents - owner relationships
+  //         { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
+  //         { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
+  //         { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
+  //         { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
+  //         { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
+  //         { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
+  //         { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
+  //         { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
+  //         { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
+  //         { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
+  //         { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
 
-        // HR and Admin access to private documents
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
-        { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
-      ],
-    },
-    {
-      authorizationModelId: model.authorization_model_id,
-    }
-  );
+  //         // HR and Admin access to private documents
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
+  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
+  //       ],
+  //     },
+  //     {
+  //       authorizationModelId: model.authorization_model_id,
+  //     }
+  //   );
 
   console.log(
     "Successfully initialized FGA store with authorization model and test data"

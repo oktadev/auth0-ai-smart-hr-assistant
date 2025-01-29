@@ -1,30 +1,49 @@
 model
-  schema 1.1
+    schema 1.1
 
 type user
+    relations
+        define team: [team]
+        define can_manage: manager from team
 
-type employee_document
-  relations
-    define owner: [user]
-    define viewer: [user, user:*,team#member, role#member]
-    define can_view: owner or viewer
-
-type team_document
-  relations
-    define owner: [user]
-    define viewer: [user,user:*,team#member,role#member]
-    define can_view: owner or viewer
-
-type company_document
-  relations
-    define owner: [user]
-    define viewer: [user:*]
-    define can_view: owner or viewer
+type company
+    relations
+        define member: [user] or is_admin or is_hr
+        define is_admin: [user]
+        define is_hr: [user]
 
 type team
-  relations
-    define member: [user, team#member]
+    relations
+        define member: [user] or manager
+        define manager: [user]
 
-type role
-  relations
-    define member: [user, role#member]
+type salary_information
+    relations
+        define owner: [user]
+        define company: [company]
+        define can_read: owner or is_hr from company or is_admin from company
+
+type performance_review
+    relations
+        define owner: [user]
+        define company: [company]
+        define can_read: owner or is_hr from company or can_manage from owner or is_admin from company
+
+type employee_information
+    relations
+        define owner: [user]
+        define company: [company]
+        define can_read: owner or is_hr from company or is_admin from company
+
+type team_document
+    relations
+        define owner: [user]
+        define company: [company]
+        define team: [team]
+        define can_read: owner or member from team or is_admin from company
+
+type public_document # such as company_policy or employee_public_information
+    relations
+        define owner: [user]
+        define company: [company]
+        define can_read: owner or member from company

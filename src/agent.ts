@@ -1,10 +1,8 @@
 import {
-  Document,
   OpenAIAgent,
   QueryEngineTool,
   SimpleDirectoryReader,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 import "dotenv/config";
 import path from "path";
@@ -38,8 +36,10 @@ export class LlmAgent {
         // FGA tuple to query for the user's permissions
         buildQuery: (document) => ({
           user: `user:${this.user.name}`,
-          object: `doc:${document.metadata.file_name.split(".")[0]}`,
-          relation: "can_view",
+          object: `employee_information:${
+            document.metadata.file_name.split(".")[0]
+          }`,
+          relation: "can_read",
         }),
       });
 
