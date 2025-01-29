@@ -30,136 +30,215 @@ async function main() {
     type_definitions: [
       {
         type: "user",
-        relations: {},
       },
       {
+        metadata: {
+          relations: {
+            can_view: {},
+            owner: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+              ],
+            },
+            viewer: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+                {
+                  type: "user",
+                  wildcard: {},
+                },
+                {
+                  relation: "member",
+                  type: "team",
+                },
+                {
+                  relation: "member",
+                  type: "role",
+                },
+              ],
+            },
+          },
+        },
+        relations: {
+          can_view: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  computedUserset: {
+                    relation: "viewer",
+                  },
+                },
+              ],
+            },
+          },
+          owner: {
+            this: {},
+          },
+          viewer: {
+            this: {},
+          },
+        },
         type: "employee_document",
-        relations: {
-          owner: {
-            this: {},
-          },
-          viewer: {
-            union: {
-              child: [
-                { this: {} },
-                { computedUserset: { object: "user:*" } },
+      },
+      {
+        metadata: {
+          relations: {
+            can_view: {},
+            owner: {
+              directly_related_user_types: [
                 {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "team" },
-                  },
-                },
-                {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "role" },
-                  },
+                  type: "user",
                 },
               ],
             },
-          },
-          can_view: {
-            union: {
-              child: [
-                { computedUserset: { relation: "owner" } },
-                { computedUserset: { relation: "viewer" } },
+            viewer: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+                {
+                  type: "user",
+                  wildcard: {},
+                },
+                {
+                  relation: "member",
+                  type: "team",
+                },
+                {
+                  relation: "member",
+                  type: "role",
+                },
               ],
             },
           },
         },
-      },
-      {
+        relations: {
+          can_view: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  computedUserset: {
+                    relation: "viewer",
+                  },
+                },
+              ],
+            },
+          },
+          owner: {
+            this: {},
+          },
+          viewer: {
+            this: {},
+          },
+        },
         type: "team_document",
-        relations: {
-          owner: {
-            this: {},
-          },
-          viewer: {
-            union: {
-              child: [
-                { this: {} },
-                { computedUserset: { object: "user:*" } },
+      },
+      {
+        metadata: {
+          relations: {
+            can_view: {},
+            owner: {
+              directly_related_user_types: [
                 {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "team" },
-                  },
-                },
-                {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "role" },
-                  },
+                  type: "user",
                 },
               ],
             },
-          },
-          can_view: {
-            union: {
-              child: [
-                { computedUserset: { relation: "owner" } },
-                { computedUserset: { relation: "viewer" } },
+            viewer: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                  wildcard: {},
+                },
               ],
             },
           },
         },
-      },
-      {
+        relations: {
+          can_view: {
+            union: {
+              child: [
+                {
+                  computedUserset: {
+                    relation: "owner",
+                  },
+                },
+                {
+                  computedUserset: {
+                    relation: "viewer",
+                  },
+                },
+              ],
+            },
+          },
+          owner: {
+            this: {},
+          },
+          viewer: {
+            this: {},
+          },
+        },
         type: "company_document",
+      },
+      {
+        metadata: {
+          relations: {
+            member: {
+              directly_related_user_types: [
+                {
+                  type: "user",
+                },
+                {
+                  relation: "member",
+                  type: "team",
+                },
+              ],
+            },
+          },
+        },
         relations: {
-          owner: {
+          member: {
             this: {},
           },
-          viewer: {
-            union: {
-              child: [{ computedUserset: { object: "user:*" } }],
-            },
-          },
-          can_view: {
-            union: {
-              child: [
-                { computedUserset: { relation: "owner" } },
-                { computedUserset: { relation: "viewer" } },
-              ],
-            },
-          },
         },
-      },
-      {
         type: "team",
-        relations: {
-          member: {
-            union: {
-              child: [
-                { this: {} },
-                {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "team" },
-                  },
-                },
-              ],
-            },
-          },
-        },
       },
       {
-        type: "role",
-        relations: {
-          member: {
-            union: {
-              child: [
-                { this: {} },
+        metadata: {
+          relations: {
+            member: {
+              directly_related_user_types: [
                 {
-                  tupleToUserset: {
-                    tupleset: { relation: "member" },
-                    computedUserset: { object: "role" },
-                  },
+                  type: "user",
+                },
+                {
+                  relation: "member",
+                  type: "role",
                 },
               ],
             },
           },
         },
+        relations: {
+          member: {
+            this: {},
+          },
+        },
+        type: "role",
       },
     ],
   };
@@ -172,6 +251,7 @@ async function main() {
   // 02. CONFIGURE PRE-DEFINED TUPLES
   await fgaClient.write(
     {
+      // prettier-ignore
       writes: [
         // User role assignments
         { user: "user:admin", relation: "member", object: "role:admin" },
@@ -201,7 +281,56 @@ async function main() {
         { user: "user:*", relation: "viewer", object: "employee_document:ronja_kohler_public" },
         { user: "user:*", relation: "viewer", object: "employee_document:sabitha_hari_public" },
         { user: "user:*", relation: "viewer", object: "employee_document:wei_chen_public" },
+        { user: "user:*", relation: "viewer", object: "company_document:code_of_conduct_public" },
+        { user: "user:*", relation: "viewer", object: "company_document:leave_policy_public" },
+        { user: "user:*", relation: "viewer", object: "company_document:wfh_policy_public" },
+      ],
+    },
+    {
+      authorizationModelId: model.authorization_model_id,
+    }
+  );
 
+  await fgaClient.write(
+    {
+      // prettier-ignore
+      writes: [
+        // Private documents - owner relationships
+        { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
+        { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
+        { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
+        { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
+        { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
+        { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
+        { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
+        { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
+        { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
+        { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
+        { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
+
+        // HR and Admin access to private documents
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
+        { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
+      ],
+    },
+    {
+      authorizationModelId: model.authorization_model_id,
+    }
+  );
+
+  await fgaClient.write(
+    {
+      // prettier-ignore
+      writes: [
         // Private documents - owner relationships
         { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
         { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },

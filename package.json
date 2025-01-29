@@ -12,7 +12,8 @@
     "dev": "ts-node src/index.ts",
     "prepare": "npm run build",
     "fga:init": "npx tsx ./scripts/fga-init.ts",
-    "fga:test": "fga model test --tests tests.fga.yaml"
+    "fga:test": "fga model test --tests tests.fga.yaml",
+    "fga:transform": "fga model transform --file schema.fga"
   },
   "keywords": [
     "cli",
