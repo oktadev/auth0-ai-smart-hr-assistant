@@ -65,6 +65,63 @@ Manager Level +
 
 - Full access to all data
 
+## Future Enhancements
+
+- Convert to Express App and add a Chat UI for the application
+- Integrate Auth0 and get the user information from Auth0
+- Add tool calling agent
+- Add SQL DB for realtime data
+- Add Async auth example
+
+## How to run
+
+### Prerequisites
+
+- An Okta FGA account, you can create one [here](https://dashboard.fga.dev).
+- An OpenAI account and API key create one [here](https://platform.openai.com).
+
+### Setup
+
+1. Install the dependencies
+
+```sh
+npm install
+```
+
+2. Create a `.env` file using the format below:
+
+   ```sh
+    # OpenAI
+    OPENAI_API_KEY=xx-xxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+    # Okta FGA
+    FGA_STORE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+    FGA_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+    FGA_CLIENT_SECRET=xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # Required only for non-US regions
+    FGA_API_URL=https://api.xxx.fga.dev
+    FGA_API_AUDIENCE=https://api.xxx.fga.dev/
+   ```
+
+### Obtain OpenAI API Key
+
+[Use this page for instructions on how to find your OpenAI API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key). Once you have your key, update the `.env` file accordingly.
+
+### Configure Okta FGA
+
+1. **Create a client**
+
+   Navigate to _Settings_ and in the _Authorized Clients_ section click **+ Create Client** button. On the new page give your client a name and mark all three client permissions then click **Create**.
+
+2. Copy the information on the modal and update your `.env` file with the values you now have for `FGA_STORE_ID`, `FGA_CLIENT_ID`, and `FGA_CLIENT_SECRET`.
+3. Run the `npm run fga-init` script to initialize the FGA store with the model and tuples.
+
+### Run the application
+
+```sh
+npm start
+```
+
 ## Technical Stack
 
 This application is built with TypeScript, Node.js, LlamaIndex, and OpenFGA.
