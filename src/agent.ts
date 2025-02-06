@@ -56,7 +56,10 @@ export class LlmAgent {
       ];
 
       // Create an agent using the tools array and OpenAI GPT-4 LLM
-      this.agent = new OpenAIAgent({ tools });
+      this.agent = new OpenAIAgent({
+        tools,
+        systemPrompt: `You are a helpful HR assistant. ${this.user.name} is the user you are talking to.`,
+      });
     } catch (error) {
       console.error("Error initializing Ai Agent:", error);
       throw error;
