@@ -476,14 +476,41 @@ async function main() {
 
   console.log("NEW MODEL ID: ", model.authorization_model_id);
 
+  const users = [
+    "admin",
+    "sabitha",
+    "priya",
+    "david",
+    "deepa",
+    "michael",
+    "jose",
+    "anastasia",
+    "james",
+    "wei",
+    "ronja",
+    "karthik",
+  ];
+
+  const userTuples = users.map((user) => ({
+    user: `user:${user}`,
+    relation: "member",
+    object: "company:zeko",
+  }));
+
+  // 01. WRITE USER TUPLES
+  await fgaClient.write(
+    { writes: userTuples },
+    {
+      authorizationModelId: model.authorization_model_id,
+    }
+  );
+
   // 02. CONFIGURE PRE-DEFINED TUPLES
   await fgaClient.write(
     {
       // prettier-ignore
       writes: [
         // User role assignments
-        { user: "user:admin", relation: "member", object: "company:zeko" },
-        { user: "user:sabitha", relation: "member", object: "company:zeko" },
         { user: "user:sabitha", relation: "owner", object: "employee_information:sabitha_hari_public" },
         // { user: "user:priya", relation: "member", object: "role:hr" },
         // { user: "user:david", relation: "member", object: "role:manager" },
