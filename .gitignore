@@ -35,3 +35,10 @@ coverage/
 # Misc
 .cache/
 .temp/ 
+
+# next.js
+/.next/
+/out/
+
+# vercel
+.vercel

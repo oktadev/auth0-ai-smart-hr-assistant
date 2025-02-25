@@ -85,10 +85,10 @@ Manager Level +
 1. Install the dependencies
 
 ```sh
-npm install
+bun install # or npm install
 ```
 
-2. Create a `.env` file using the format below:
+2. Create a `.env.local` file using the format below:
 
    ```sh
     # OpenAI
@@ -119,12 +119,12 @@ npm install
 ### Run the application
 
 ```sh
-npm start
+bun start # or npm start
 ```
 
 ## Technical Stack
 
-This application is built with TypeScript, Node.js, LlamaIndex, and OpenFGA.
+This application is built with TypeScript, Next.js, TailwindCSS, LlamaIndex, and OpenFGA.
 
 ## Data Sources
 
