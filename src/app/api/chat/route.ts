@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       // FGA tuple to query for the user's permissions
       buildQuery: (document: any) => ({
         user: `user:${user}`,
-        object: `${document.metadata.file_name.split('.')[0]}`,
+        object: document.metadata.file_name,
         relation: 'can_read',
       }),
     });

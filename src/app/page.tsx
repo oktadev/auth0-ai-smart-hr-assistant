@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="border border-input bg-background rounded-lg flex flex-col gap-2 max-w-[200px] mx-auto relative my-2">
+      <div className="border border-input bg-background rounded-lg flex flex-col gap-2 max-w-[200px] mx-auto relative my-2 z-10">
         <Select
           className="bg-transparent text-white border border-white/20 rounded relative z-10"
           onChange={(e) => setUser(e.target.value)}

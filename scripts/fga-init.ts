@@ -1,6 +1,7 @@
-import "dotenv/config";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import { CredentialsMethod, OpenFgaClient } from "@openfga/sdk";
+import { CredentialsMethod, OpenFgaClient } from '@openfga/sdk';
 
 /**
  * Initializes the OpenFgaClient, writes an authorization model, and configures pre-defined tuples.
@@ -11,14 +12,15 @@ import { CredentialsMethod, OpenFgaClient } from "@openfga/sdk";
  *    3. Configures pre-defined tuples using the newly created authorization model.
  */
 async function main() {
+  require('dotenv').config({ path: ['.env.local', '.env'] });
   const fgaClient = new OpenFgaClient({
-    apiUrl: process.env.FGA_API_URL || "https://api.us1.fga.dev",
+    apiUrl: process.env.FGA_API_URL || 'https://api.us1.fga.dev',
     storeId: process.env.FGA_STORE_ID!,
     credentials: {
       method: CredentialsMethod.ClientCredentials,
       config: {
-        apiTokenIssuer: process.env.FGA_API_TOKEN_ISSUER || "auth.fga.dev",
-        apiAudience: process.env.FGA_API_AUDIENCE || "https://api.us1.fga.dev/",
+        apiTokenIssuer: process.env.FGA_API_TOKEN_ISSUER || 'auth.fga.dev',
+        apiAudience: process.env.FGA_API_AUDIENCE || 'https://api.us1.fga.dev/',
         clientId: process.env.FGA_CLIENT_ID!,
         clientSecret: process.env.FGA_CLIENT_SECRET!,
       },
@@ -26,7 +28,7 @@ async function main() {
   });
 
   const authorizationModel = {
-    schema_version: "1.1",
+    schema_version: '1.1',
     type_definitions: [
       {
         metadata: {
@@ -35,7 +37,7 @@ async function main() {
             team: {
               directly_related_user_types: [
                 {
-                  type: "team",
+                  type: 'team',
                 },
               ],
             },
@@ -45,10 +47,10 @@ async function main() {
           can_manage: {
             tupleToUserset: {
               computedUserset: {
-                relation: "manager",
+                relation: 'manager',
               },
               tupleset: {
-                relation: "team",
+                relation: 'team',
               },
             },
           },
@@ -56,7 +58,7 @@ async function main() {
             this: {},
           },
         },
-        type: "user",
+        type: 'user',
       },
       {
         metadata: {
@@ -64,21 +66,21 @@ async function main() {
             is_admin: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
             is_hr: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
             member: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -99,19 +101,19 @@ async function main() {
                 },
                 {
                   computedUserset: {
-                    relation: "is_admin",
+                    relation: 'is_admin',
                   },
                 },
                 {
                   computedUserset: {
-                    relation: "is_hr",
+                    relation: 'is_hr',
                   },
                 },
               ],
             },
           },
         },
-        type: "company",
+        type: 'company',
       },
       {
         metadata: {
@@ -119,14 +121,14 @@ async function main() {
             manager: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
             member: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -144,14 +146,14 @@ async function main() {
                 },
                 {
                   computedUserset: {
-                    relation: "manager",
+                    relation: 'manager',
                   },
                 },
               ],
             },
           },
         },
-        type: "team",
+        type: 'team',
       },
       {
         metadata: {
@@ -160,14 +162,14 @@ async function main() {
             company: {
               directly_related_user_types: [
                 {
-                  type: "company",
+                  type: 'company',
                 },
               ],
             },
             owner: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -179,26 +181,26 @@ async function main() {
               child: [
                 {
                   computedUserset: {
-                    relation: "owner",
+                    relation: 'owner',
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_hr",
+                      relation: 'is_hr',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_admin",
+                      relation: 'is_admin',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
@@ -212,7 +214,7 @@ async function main() {
             this: {},
           },
         },
-        type: "salary_information",
+        type: 'salary_information',
       },
       {
         metadata: {
@@ -221,14 +223,14 @@ async function main() {
             company: {
               directly_related_user_types: [
                 {
-                  type: "company",
+                  type: 'company',
                 },
               ],
             },
             owner: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -240,36 +242,36 @@ async function main() {
               child: [
                 {
                   computedUserset: {
-                    relation: "owner",
+                    relation: 'owner',
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_hr",
+                      relation: 'is_hr',
                     },
                     tupleset: {
-                      relation: "company",
-                    },
-                  },
-                },
-                {
-                  tupleToUserset: {
-                    computedUserset: {
-                      relation: "can_manage",
-                    },
-                    tupleset: {
-                      relation: "owner",
+                      relation: 'company',
                     },
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_admin",
+                      relation: 'can_manage',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'owner',
+                    },
+                  },
+                },
+                {
+                  tupleToUserset: {
+                    computedUserset: {
+                      relation: 'is_admin',
+                    },
+                    tupleset: {
+                      relation: 'company',
                     },
                   },
                 },
@@ -283,7 +285,7 @@ async function main() {
             this: {},
           },
         },
-        type: "performance_review",
+        type: 'performance_review',
       },
       {
         metadata: {
@@ -292,14 +294,14 @@ async function main() {
             company: {
               directly_related_user_types: [
                 {
-                  type: "company",
+                  type: 'company',
                 },
               ],
             },
             owner: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -311,26 +313,26 @@ async function main() {
               child: [
                 {
                   computedUserset: {
-                    relation: "owner",
+                    relation: 'owner',
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_hr",
+                      relation: 'is_hr',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_admin",
+                      relation: 'is_admin',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
@@ -344,7 +346,7 @@ async function main() {
             this: {},
           },
         },
-        type: "employee_information",
+        type: 'employee_information',
       },
       {
         metadata: {
@@ -353,21 +355,21 @@ async function main() {
             company: {
               directly_related_user_types: [
                 {
-                  type: "company",
+                  type: 'company',
                 },
               ],
             },
             owner: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
             team: {
               directly_related_user_types: [
                 {
-                  type: "team",
+                  type: 'team',
                 },
               ],
             },
@@ -379,26 +381,26 @@ async function main() {
               child: [
                 {
                   computedUserset: {
-                    relation: "owner",
+                    relation: 'owner',
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "member",
+                      relation: 'member',
                     },
                     tupleset: {
-                      relation: "team",
+                      relation: 'team',
                     },
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "is_admin",
+                      relation: 'is_admin',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
@@ -415,7 +417,7 @@ async function main() {
             this: {},
           },
         },
-        type: "team_document",
+        type: 'team_document',
       },
       {
         metadata: {
@@ -424,14 +426,14 @@ async function main() {
             company: {
               directly_related_user_types: [
                 {
-                  type: "company",
+                  type: 'company',
                 },
               ],
             },
             owner: {
               directly_related_user_types: [
                 {
-                  type: "user",
+                  type: 'user',
                 },
               ],
             },
@@ -443,16 +445,16 @@ async function main() {
               child: [
                 {
                   computedUserset: {
-                    relation: "owner",
+                    relation: 'owner',
                   },
                 },
                 {
                   tupleToUserset: {
                     computedUserset: {
-                      relation: "member",
+                      relation: 'member',
                     },
                     tupleset: {
-                      relation: "company",
+                      relation: 'company',
                     },
                   },
                 },
@@ -466,163 +468,166 @@ async function main() {
             this: {},
           },
         },
-        type: "public_document",
+        type: 'public_document',
       },
     ],
   };
 
   // 01. WRITE MODEL
+  // @ts-ignore
   const model = await fgaClient.writeAuthorizationModel(authorizationModel);
 
-  console.log("NEW MODEL ID: ", model.authorization_model_id);
+  console.log('NEW MODEL ID: ', model.authorization_model_id);
 
   const users = [
-    "admin",
-    "sabitha",
-    "priya",
-    "david",
-    "deepa",
-    "michael",
-    "jose",
-    "anastasia",
-    "james",
-    "wei",
-    "ronja",
-    "karthik",
+    'admin',
+    'sabitha',
+    'priya',
+    'david',
+    'deepa',
+    'michael',
+    'jose',
+    'anastasia',
+    'james',
+    'wei',
+    'ronja',
+    'karthik',
   ];
 
   const userTuples = users.map((user) => ({
     user: `user:${user}`,
-    relation: "member",
-    object: "company:zeko",
+    relation: 'member',
+    object: 'company:zeko',
   }));
 
-  // 01. WRITE USER TUPLES
+  //   01. WRITE USER TUPLES
   await fgaClient.write(
     { writes: userTuples },
     {
       authorizationModelId: model.authorization_model_id,
-    }
+    },
   );
 
-  // 02. CONFIGURE PRE-DEFINED TUPLES
+  console.log('USER TUPLES: done');
+
+  const userDocTuples: any[] = [];
+  const employeeFiles = readDocuments('src/data/employees');
+
+  users.forEach((user) => {
+    const employeePrivateFiles = employeeFiles.filter((file) => file.includes(user) && file.includes('private'));
+    employeePrivateFiles.forEach((file) => {
+      userDocTuples.push({
+        user: `user:${user}`,
+        relation: 'owner',
+        object: file,
+      });
+    });
+  });
+
+  //   02. WRITE USER DOC TUPLES
+  await fgaClient.write(
+    { writes: userDocTuples },
+    {
+      authorizationModelId: model.authorization_model_id,
+    },
+  );
+
+  console.log('USER DOC TUPLES: done');
+
+  const publicFiles = readDocuments('src/data/policies');
+  const publicDocTuples = publicFiles.map((file) => ({
+    user: 'company:zeko',
+    relation: 'company',
+    object: file,
+  }));
+
+  //   03. WRITE PUBLIC DOC TUPLES
+  await fgaClient.write(
+    { writes: publicDocTuples },
+    {
+      authorizationModelId: model.authorization_model_id,
+    },
+  );
+
+  console.log('PUBLIC DOC TUPLES: done');
+
+  const publicEmployeeDocTuples = employeeFiles
+    .filter((file) => file.includes('public'))
+    .map((file) => ({
+      user: 'company:zeko',
+      relation: 'company',
+      object: file,
+    }));
+
+  //   04. WRITE PUBLIC DOC TUPLES
+  await fgaClient.write(
+    { writes: publicEmployeeDocTuples },
+    {
+      authorizationModelId: model.authorization_model_id,
+    },
+  );
+
+  console.log('PUBLIC EMPLOYEE DOC TUPLES: done');
+
+  // 05. WRITE OTHER TUPLES
   await fgaClient.write(
     {
       // prettier-ignore
       writes: [
-        // User role assignments
-        { user: "user:sabitha", relation: "owner", object: "employee_information:sabitha_hari_public" },
-        // { user: "user:priya", relation: "member", object: "role:hr" },
-        // { user: "user:david", relation: "member", object: "role:manager" },
-        // { user: "user:deepa", relation: "member", object: "role:manager" },
-        // { user: "user:michael", relation: "member", object: "role:manager" },
-        // { user: "user:karthik", relation: "member", object: "role:manager" },
-        // { user: "user:james", relation: "member", object: "role:manager" },
+        { user: 'user:admin', relation: 'is_admin', object: 'company:zeko' },
+        { user: 'user:priya', relation: 'is_hr', object: 'company:zeko' },
 
-        // // Team memberships
-        // { user: "user:anastasia", relation: "member", object: "team:backend" },
-        // { user: "user:jose", relation: "member", object: "team:platform" },
-        // { user: "user:sabitha", relation: "member", object: "team:frontend" },
-        // { user: "user:wei", relation: "member", object: "team:backend" },
-        // { user: "user:ronja", relation: "member", object: "team:devops" },
+        // Team managers
+        { user: 'user:david', relation: 'manager', object: 'team:backend' },
+        { user: 'user:deepa', relation: 'manager', object: 'team:frontend' },
+        { user: 'user:michael', relation: 'manager', object: 'team:platform' },
+        { user: 'user:karthik', relation: 'manager', object: 'team:devops' },
+        
+        // Team memberships
+        { user: 'user:sabitha', relation: 'manager', object: 'team:frontend' },
+        { user: "user:anastasia", relation: "member", object: "team:backend" },
+        { user: "user:jose", relation: "member", object: "team:platform" },
+        { user: "user:sabitha", relation: "member", object: "team:frontend" },
+        { user: "user:wei", relation: "member", object: "team:backend" },
+        { user: "user:ronja", relation: "member", object: "team:devops" },
 
-        // // Public documents - accessible to all users
-        // { user: "user:*", relation: "viewer", object: "employee_document:anastasia_kuznetsova_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:david_kim_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:deepa_krishnan_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:james_wilson_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:jose_garcia_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:karthik_subramanian_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:michael_rodriguez_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:priya_venkatesh_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:ronja_kohler_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:sabitha_hari_public" },
-        // { user: "user:*", relation: "viewer", object: "employee_document:wei_chen_public" },
-        // { user: "user:*", relation: "viewer", object: "company_document:code_of_conduct_public" },
-        // { user: "user:*", relation: "viewer", object: "company_document:leave_policy_public" },
-        // { user: "user:*", relation: "viewer", object: "company_document:wfh_policy_public" },
-      ],
+        // Team public documents
+        { user: "company:zeko", relation: "company", object: "public_document:eng_team_okrs_public.pdf" },
+        { user: "company:zeko", relation: "company", object: "public_document:eng_team_structure_public.pdf" },
+        { user: "company:zeko", relation: "company", object: "public_document:weekly_updates_public.pdf" },
+
+        // Team private documents
+        { user: "team:backend", relation: "team", object: "team_document:meeting_notes.pdf" },
+        { user: "team:backend", relation: "team", object: "team_document:backend_team_private.md" },
+        { user: "team:devops", relation: "team", object: "team_document:devops_team_private.md" },
+        { user: "team:frontend", relation: "team", object: "team_document:frontend_team_private.md" },
+        { user: "team:platform", relation: "team", object: "team_document:platform_team_private.md" },
+        ],
     },
     {
       authorizationModelId: model.authorization_model_id,
+    },
+  );
+
+  console.log('Successfully initialized FGA store with authorization model and test data');
+}
+
+function readDocuments(docPath: string) {
+  const dir = path.join(process.cwd(), docPath);
+
+  try {
+    // Verify the directory exists
+    if (!fs.existsSync(dir)) {
+      console.error(`Directory ${dir} does not exist`);
+      return [];
     }
-  );
 
-  //   await fgaClient.write(
-  //     {
-  //       // prettier-ignore
-  //       writes: [
-  //         // Private documents - owner relationships
-  //         { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
-  //         { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
-  //         { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
-  //         { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
-  //         { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
-  //         { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
-  //         { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
-  //         { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
-  //         { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
-  //         { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
-  //         { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
-
-  //         // HR and Admin access to private documents
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
-  //       ],
-  //     },
-  //     {
-  //       authorizationModelId: model.authorization_model_id,
-  //     }
-  //   );
-
-  //   await fgaClient.write(
-  //     {
-  //       // prettier-ignore
-  //       writes: [
-  //         // Private documents - owner relationships
-  //         { user: "user:anastasia", relation: "owner", object: "employee_document:anastasia_kuznetsova_private" },
-  //         { user: "user:david", relation: "owner", object: "employee_document:david_kim_private" },
-  //         { user: "user:deepa", relation: "owner", object: "employee_document:deepa_krishnan_private" },
-  //         { user: "user:james", relation: "owner", object: "employee_document:james_wilson_private" },
-  //         { user: "user:jose", relation: "owner", object: "employee_document:jose_garcia_private" },
-  //         { user: "user:karthik", relation: "owner", object: "employee_document:karthik_subramanian_private" },
-  //         { user: "user:michael", relation: "owner", object: "employee_document:michael_rodriguez_private" },
-  //         { user: "user:priya", relation: "owner", object: "employee_document:priya_venkatesh_private" },
-  //         { user: "user:ronja", relation: "owner", object: "employee_document:ronja_kohler_private" },
-  //         { user: "user:sabitha", relation: "owner", object: "employee_document:sabitha_hari_private" },
-  //         { user: "user:wei", relation: "owner", object: "employee_document:wei_chen_private" },
-
-  //         // HR and Admin access to private documents
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:anastasia_kuznetsova_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:david_kim_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:deepa_krishnan_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:james_wilson_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:jose_garcia_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:karthik_subramanian_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:michael_rodriguez_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:priya_venkatesh_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:ronja_kohler_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:sabitha_hari_private" },
-  //         { user: "role:hr#member", relation: "viewer", object: "employee_document:wei_chen_private" }
-  //       ],
-  //     },
-  //     {
-  //       authorizationModelId: model.authorization_model_id,
-  //     }
-  //   );
-
-  console.log(
-    "Successfully initialized FGA store with authorization model and test data"
-  );
+    // Read all files in the directory
+    return fs.readdirSync(dir);
+  } catch (error) {
+    console.error('Error reading documents:', error);
+    return [];
+  }
 }
 
 main().catch(console.error);
