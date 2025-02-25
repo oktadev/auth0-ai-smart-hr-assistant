@@ -70,6 +70,8 @@ Manager Level +
 - Integrate Auth0 and get the user information from Auth0
 - Add SQL DB for realtime data
 
+![SmartHR Assistant](./public/images/home-page.png)
+
 ## How to run
 
 ### Prerequisites
