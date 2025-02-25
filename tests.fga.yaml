@@ -2,8 +2,8 @@ name: Smart HR Assistant Authorization Tests
 
 model_file: ./schema.fga
 
-tuples: 
-# Mandatory tuples
+tuples:
+  # Mandatory tuples
   - user: user:john_doe
     relation: member
     object: company:myCompany
@@ -16,145 +16,6 @@ tuples:
   - user: user:john_doe
     relation: owner
     object: performance_review:john_doe
-# # Base tuples that will be available for all tests
-# tuples:
-#   # Document ownership and relationships
-#   - user: user:*
-#     relation: viewer
-#     object: employee_document:john_public_profile
-
-#   - user: user:*
-#     relation: viewer
-#     object: company_document:policy_doc
-
-#   - user: user:*
-#     relation: viewer
-#     object: team_document:devops_okr_public
-
-#   - user: user:john
-#     relation: owner
-#     object: employee_document:john_private_profile
-
-#   - user: user:john
-#     relation: member
-#     object: team:devops
-
-#   - user: team:devops#member
-#     relation: viewer
-#     object: team_document:devops_okr_private
-
-#   - user: user:alice
-#     relation: member
-#     object: role:manager
-
-#   - user: role:manager#member
-#     relation: viewer
-#     object: employee_document:john_private_profile
-
-#   - user: user:sarah
-#     relation: member
-#     object: role:hr
-
-#   - user: role:hr#member
-#     relation: viewer
-#     object: employee_document:john_private_profile
-
-#   - user: role:hr#member
-#     relation: viewer
-#     object: team_document:devops_okr_private
-
-#   - user: user:admin
-#     relation: member
-#     object: role:admin
-
-#   - user: role:admin#member
-#     relation: viewer
-#     object: employee_document:john_private_profile
-
-#   - user: role:admin#member
-#     relation: viewer
-#     object: team_document:devops_okr_private
-
-# tests:
-#   - name: Employees Access Control
-#     check:
-#       # Owner can view their private documents
-#       - user: user:john
-#         object: employee_document:john_private_profile
-#         assertions:
-#           can_view: true
-#       # any user can not view private docs
-#       - user: user:sam
-#         object: employee_document:john_private_profile
-#         assertions:
-#           can_view: false
-#       # any user can view public docs
-#       - user: user:sam
-#         object: employee_document:john_public_profile
-#         assertions:
-#           can_view: true
-#       # any user can view company docs
-#       - user: user:john
-#         object: company_document:policy_doc
-#         assertions:
-#           can_view: true
-#       # any user can view their team private docs
-#       - user: user:john
-#         object: team_document:devops_okr_private
-#         assertions:
-#           can_view: true
-#       # any user can not view other team private docs
-#       - user: user:sam
-#         object: team_document:devops_okr_private
-#         assertions:
-#           can_view: false
-#       # any user can view team public docs
-#       - user: user:sam
-#         object: team_document:devops_okr_public
-#         assertions:
-#           can_view: true
-
-#   - name: Managers Access Control
-#     check:
-#       # Manager can view their teams private documents
-#       - user: user:alice
-#         object: employee_document:john_private_profile
-#         assertions:
-#           can_view: true
-#       # Manager can not view other teams private documents
-#       - user: user:alice
-#         object: employee_document:sam_private_profile
-#         assertions:
-#           can_view: false
-
-#   - name: HRs Access Control
-#     check:
-#       # HR can view all private documents
-#       - user: user:sarah
-#         object: employee_document:john_private_profile
-#         assertions:
-#           can_view: true
-#       # HR can view all team private documents
-#       - user: user:sarah
-#         object: team_document:devops_okr_private
-#         assertions:
-#           can_view: true
-
-#   - name: Admins Access Control
-#     check:
-#       # Admin can view all documents
-#       - user: user:admin
-#         object: employee_document:john_private_profile
-#         assertions:
-#           can_view: true
-#       - user: user:admin
-#         object: team_document:devops_okr_private
-#         assertions:
-#           can_view: true
-#       - user: user:admin
-#         object: company_document:policy_doc
-#         assertions:
-#           can_view: true
 tests:
   - name: Employees Access Control
     description: As an Owner I get access to my Salary information, Perfomance Review and Public Infromation
@@ -276,4 +137,3 @@ tests:
         object: team_document:meeting_notes
         assertions:
           can_read: false
-

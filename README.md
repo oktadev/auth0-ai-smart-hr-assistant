@@ -67,11 +67,8 @@ Manager Level +
 
 ## Future Enhancements
 
-- Convert to Express App and add a Chat UI for the application
 - Integrate Auth0 and get the user information from Auth0
-- Add tool calling agent
 - Add SQL DB for realtime data
-- Add Async auth example
 
 ## How to run
 
@@ -85,7 +82,7 @@ Manager Level +
 1. Install the dependencies
 
 ```sh
-npm install
+bun install # or npm install
 ```
 
 2. Create a `.env` file using the format below:
@@ -114,12 +111,12 @@ npm install
    Navigate to _Settings_ and in the _Authorized Clients_ section click **+ Create Client** button. On the new page give your client a name and mark all three client permissions then click **Create**.
 
 2. Copy the information on the modal and update your `.env` file with the values you now have for `FGA_STORE_ID`, `FGA_CLIENT_ID`, and `FGA_CLIENT_SECRET`.
-3. Run the `npm run fga-init` script to initialize the FGA store with the model and tuples.
+3. Run the `bun run fga:init` script to initialize the FGA store with the model and tuples.
 
 ### Run the application
 
 ```sh
-npm start
+bun start # or npm start
 ```
 
 ## Technical Stack
