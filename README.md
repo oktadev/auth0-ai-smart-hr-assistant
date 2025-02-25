@@ -2,6 +2,8 @@
 
 A sample application demonstrating how to implement an AI agent with fine-grained authorization controls when accessing sensitive user data.
 
+> For a CLI version of this application, please refer to the [cli-only-app](https://github.com/oktadev/auth0-ai-smart-hr-assistant/tree/cli-only-app) branch.
+
 ## Overview
 
 SmartHR Assistant is an intelligent document management system that:
@@ -113,7 +115,7 @@ bun install # or npm install
    Navigate to _Settings_ and in the _Authorized Clients_ section click **+ Create Client** button. On the new page give your client a name and mark all three client permissions then click **Create**.
 
 2. Copy the information on the modal and update your `.env.local` file with the values you now have for `FGA_STORE_ID`, `FGA_CLIENT_ID`, and `FGA_CLIENT_SECRET`.
-3. Run the `npm run fga-init` script to initialize the FGA store with the model and tuples.
+3. Run the `bun run fga:init` script to initialize the FGA store with the model and tuples.
 
 ### Run the application
 
